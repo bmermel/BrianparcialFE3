@@ -1,57 +1,44 @@
 import React, { useState } from 'react';
-import Data from './Card';
+import Card from './Card';
 
 const RegisterForm = () => {
-    const [fullname, setFullname] = useState('');
-    const [age, setAge] = useState(0);
-    const [nationality, setNationality] = useState('');
-    const [data, setData] = useState([]);
+
+    const [data, setData] = useState({});
     const [show, setShow] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState(true);
     
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        if (name === "fullname") {
-            setFullname(value);
-        } else if (name === "age") {
-            setAge(value);
-        } else if (name === "nacionalidad") {
-            setNationality(value);
-        }
+    const handleName  = (e) => {
+        //setFullname(e.target.value)
+        setData({...data,nombre:e.target.value})
+    }
+    const handleAge  = (e) => {
+        //setAge(e.target.value)
+        setData({...data,edad:e.target.value})
+
+    }
+     const handleNacionality  = (e) => {
+        //setNationality(e.target.value)
+        setData({...data,nacionalidad:e.target.value})
+
     }
     
-    const validateAge = (age) => {
+/*     const validateAge = (age) => {
         const parsedAge = parseInt(age);
         return isNaN(parsedAge) || parsedAge < 1;
-    }
+    } */
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log( fullname, age, nationality );
-
-
-        let mensajeError = '';
+        //console.log( fullname, age, nationality );
         
-        if (fullname.length < 3 || fullname.trim() !== fullname) {
-            mensajeError = 'Por favor chequea que la información de nombre sea correcta.';
-        } else if (nationality.length < 6) {
-            mensajeError = 'Por favor chequea que la información de nacionalidad sea correcta.';
-        } else if (validateAge){
-            mensajeError = 'Por favor chequea que la información de edad sea correcta.';
 
+        if(data.nombre.length > 3 && data.edad>0 && data.nacionalidad.length > 6){
+            setErrorMessage(false)
+            
+            console.log(data);
+        }else{
+            setShow(true)
         }
-    
-        
-    
-        if (!mensajeError) {
-            //setmostrarCard(true);
-
-        } //else setErrorMessage(mensajeError);
-        console.log(mensajeError);
-        setData([{ fullname, age, nationality }]);
-        setFullname('');
-        setAge(0);
-        setNationality('');
 
     }
 
@@ -64,8 +51,8 @@ const RegisterForm = () => {
                 <input
                     type="text"
                     name="fullname"
-                    value={fullname}
-                    onChange={handleInputChange}
+                    //value={fullname}
+                    onChange={handleName}
                 />
             </div>
 
@@ -74,8 +61,8 @@ const RegisterForm = () => {
                 <input
                     type="number"
                     name="age"
-                    value={age}
-                    onChange={handleInputChange}
+                    //value={age}
+                    onChange={handleAge}
                 />
             </div>
 
@@ -84,14 +71,15 @@ const RegisterForm = () => {
                 <input
                     type="text"
                     name="nacionalidad"
-                    value={nationality}
-                    onChange={handleInputChange}
+                    //value={nationality}
+                    onChange={handleNacionality}
                 />
             </div>
+            {(errorMessage && show) && <span>hay errores.</span>}
             <button type="submit">Enviar</button>
         </form>
         <br />
-        <Data data={data} />
+        {(!show && !errorMessage) && <Card data={data} />}
     </div>
   )
 }
